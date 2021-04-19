@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <h1>Flexbox Slider</h1>
+    <div class="gallery">
+    <div class="wrap">
+      <button data-btn="prev">&laquo;</button>
+      <div class="sticky">♥</div>
+      <div class="scroller">
+        <ul class="items">
+          <li class="item" style="background-image:url(https://images.pexels.com/photos/1612351/pexels-photo-1612351.jpeg?cs=srgb&dl=pexels-eberhard-grossgasteiger-1612351.jpg&fm=jpg);">Chalets</li>
+          <li class="item" style="background-image:url(https://images.pexels.com/photos/3610006/pexels-photo-3610006.jpeg?cs=srgb&dl=pexels-castorly-stock-3610006.jpg&fm=jpg);">Douceur</li>
+          <li class="item" style="background-image:url(https://images.pexels.com/photos/3771110/pexels-photo-3771110.jpeg?cs=srgb&dl=pexels-andrea-piacquadio-3771110.jpg&fm=jpg);">Recevoir</li>
+        </ul>
+      </div>
+      <button data-btn="next">&raquo;</button>
+    </div>
+    <div class="gallery__nav">
+        <ul>
+            <li>
+                <img src="https://images.pexels.com/photos/1612351/pexels-photo-1612351.jpeg?cs=srgb&dl=pexels-eberhard-grossgasteiger-1612351.jpg&fm=jpg" alt="">
+            </li>
+            <li>
+                <img src="https://images.pexels.com/photos/3610006/pexels-photo-3610006.jpeg?cs=srgb&dl=pexels-castorly-stock-3610006.jpg&fm=jpg" alt="">
+            </li>
+            <li>
+                <img src="https://images.pexels.com/photos/3771110/pexels-photo-3771110.jpeg?cs=srgb&dl=pexels-andrea-piacquadio-3771110.jpg&fm=jpg" alt="">
+            </li>
+        </ul>
+    </div>
+    </div>
+    <h3 style="color: #fff; text-align: center; font-weight: 100;">TESTED</h3>
+<script>
+    (function(){
+        const d = document;
+        const gallery = d.querySelector('.gallery')
+        const wrap = gallery.querySelector('.wrap');
+        const nav = gallery.querySelector('.gallery__nav');
+        const navlis = nav.querySelectorAll('li');
+        const buttons = wrap.querySelectorAll("button");
+        const items = d.querySelector('.items');
+        const itemselements = d.querySelectorAll('.item')
+        const itemCount = itemselements.length;
+        const scroller = d.querySelector('.scroller');
+        let pos = 0;
+//var transform = Modernizr.prefixed('transform');
+        function buttonclick(e) {
+            if(e.target?.dataset?.btn){
+                switch (e.target.dataset.btn) {
+                    case "prev":
+                        prev();
+                        break;
+                    case "next":
+                        next();
+                        break;
+                }
+            }
+        }
+
+        function navclick(e) {
+            const index = Array.prototype.indexOf.call(e.target.parentElement.children, e.target)
+            console.log(index, e.target.parentElement.children)
+            pos = index
+            setTransform()
+        }
+
+        function setTransform() {
+            itemselements.forEach(elem=>{
+                elem.style.transform = 'translate3d(' + (-pos * elem.offsetWidth) + 'px,0,0)';
+            })
+            navlis.forEach(elem=>{
+                elem.style.transform = 'translate3d(' + (-pos * (elem.offsetWidth/3)) + 'px,0,0)';
+            })
+        }
+
+        function prev() {
+            pos = Math.max(pos - 1, 0);
+            setTransform();
+        }
+
+        function next() {
+            pos = Math.min(pos + 1, itemCount - 1);
+            setTransform();
+        }
+
+        function _init() {
+            buttons.forEach(button=>{
+                button.addEventListener("click", buttonclick)
+            })
+            navlis.forEach(element=>{
+                element.addEventListener("click", navclick)
+            })
+            window.addEventListener('resize', setTransform);
+        }
+        _init()
+    })()
+</script>
+</body>
+</html>
